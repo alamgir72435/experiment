@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test1-depl
+spec:
+  selector:
+    matchLabels:
+      app: test1
+  template:
+    metadata:
+      labels:
+        app: test1
+    spec:
+      containers:
+      - name: test1
+        image: alamgir72435/test1
+        resources:
+        ports:
+        - containerPort: 5000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test1-srv
+spec:
+  selector:
+    app: test1
+  ports:
+  - port: 5000
+    targetPort: 5000

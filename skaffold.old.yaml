@@ -1,0 +1,25 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+
+deploy:
+  kubectl:
+    manifests:
+      - ./k8s/infra/*
+
+# Build
+build:
+  local:
+    concurrency: 1
+    tryImportMissing: false
+    useDockerCLI: false
+    push: false
+  artifacts:
+    - image: alamgir72435/test1
+      context: test1
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - dest: .
+            src: 'src/**/*.ts'
+  

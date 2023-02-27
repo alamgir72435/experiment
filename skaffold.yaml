@@ -1,0 +1,30 @@
+apiVersion: skaffold/v4beta1
+kind: Config
+metadata:
+  name: bb
+build:
+  local:
+    concurrency: 1
+    tryImportMissing: false
+    useDockerCLI: false
+    push: false
+  artifacts:
+    - image: alamgir72435/test1
+      context: test1
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - dest: .
+            src: 'src/**/*.ts'
+  
+
+  # artifacts:
+  # - image: alamgir72435/test1
+  #   context: test1
+  #   buildpacks:
+  #     builder: gcr.io/buildpacks/builder:v1
+manifests:
+  rawYaml:
+  - k8s/infra/test1-depl.yaml
+  - k8s/infra/ingress-srv.yaml

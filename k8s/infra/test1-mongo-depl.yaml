@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test1-mongo-depl
+spec:
+  selector:
+    matchLabels:
+      app: test1-mongo
+  template:
+    metadata:
+      labels:
+        app: test1-mongo
+    spec:
+      containers:
+      - name: test1-mongo
+        image: mongo
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 27017
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test1-mongo-srv
+spec:
+  selector:
+    app: test1-mongo
+  ports:
+  - port: 27017
+    targetPort: 27017
+

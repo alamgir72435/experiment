@@ -1,0 +1,49 @@
+version: '3.9'
+
+services:
+  # Main Server
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    image: somity-server
+    ports:
+      - 6000:6000
+    environment:
+      - PLATEFORM=docker
+    deploy:
+      replicas: 2
+
+  # collection Process
+  collection-process:
+    build:
+      context: ./collection-process
+      dockerfile: Dockerfile
+    image: collection-process-server
+    ports:
+      - 6001:6001
+    environment:
+      - PLATEFORM=docker
+    deploy:
+      replicas: 2
+
+  # Nats Streaming Server
+  nats-depl:
+    command:
+      - '-p'
+      - '4222'
+      - '-m'
+      - '8222'
+      - '-hbi'
+      - '5s'
+      - '-hbt'
+      - '5s'
+      - '-SD'
+      - '-cid'
+      - 'somity'
+    image: nats-streaming:0.17.0
+    ports:
+      - 4222:4222
+      - 8222:8222
+    deploy:
+      replicas: 2
