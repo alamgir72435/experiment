@@ -3,10 +3,10 @@ kind: Ingress
 metadata:
   name: ingress-srv
   annotations:
-    kubernetes.io/ingress.class: nginx
+    # kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/use-regex: 'true'
 spec:
-  # ingressClassName: nginx
+  ingressClassName: nginx
   rules:
     - host: bb.com
       http:
@@ -19,4 +19,10 @@ spec:
                 port:
                   number: 5000
 
-
+          - pathType: Prefix
+            path: /api/test2/?(.*)
+            backend:
+              service:
+                name: test2-srv
+                port:
+                  number: 5000
