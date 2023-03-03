@@ -18,11 +18,10 @@ spec:
                 name: test1-srv
                 port:
                   number: 5000
-
           - pathType: Prefix
-            path: /api/test2/?(.*)
+            path: /
             backend:
               service:
-                name: test2-srv
+                name: demo
                 port:
-                  number: 5000
+                  number: 80
