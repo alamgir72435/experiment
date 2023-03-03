@@ -3,11 +3,29 @@ import { connect, set } from "mongoose"
 import morgan from "morgan"
 import { randomBytes } from "crypto"
 
-// import Redis
-import { redis } from "./lib/redis";
+// Import Events
+import { TestEventListener  } from "./events/TestEventListener"
 
-// nats
-import { nat } from "./lib/NatsWrapper"
+
+import  nats, { Message, Stan } from 'node-nats-streaming'
+
+// Connect nats client
+const client = nats.connect('somity', randomBytes(10).toString('hex'), { url:'http://nats-srv:4222' });
+
+client.on('connect', () => {
+  console.log('NATS Connected for Listen EVENT');
+  // Subscribe to Events
+  new TestEventListener(client).listen();
+
+})
+
+client.on('error', () => {
+  process.exit(1);
+})
+
+
+
+
 
 const app = express();
 // Middleware
@@ -16,12 +34,10 @@ app.use(express.json());
 // set morgan middleware
 morgan('tiny')
 
-console.log('Hi everyone iam test2 !')
-
 
 app.get('/api/test2/index', (req, res) => {
-  nat.publish('test', {name:'test name'})
-  res.send('Hello World')
+  // nat.publish('test', {name:'test name'})
+  res.send('Hello World from Test 2')
 });
 
 // what should i do
@@ -34,11 +50,9 @@ async function start() {
     await connect(`mongodb://test1-mongo-srv:27017/test`, {});
     console.log('MongoDB Connected on Test2');
 
-    // Connect Redis
-    redis.connect('test-redis-srv');
 
     // Nats Client 
-    await nat.connect('somity', randomBytes(10).toString('hex'), 'http://nats-srv:4222')
+    // await nat.connect('somity', randomBytes(10).toString('hex'), 'http://nats-srv:4222')
 
     app.listen(5000, () => {
       // server running

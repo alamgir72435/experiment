@@ -24,27 +24,40 @@ app.get('/api/test1/index', (req, res) => {
 });
 // what should i do
 
+app.get("**", (req, res) => {
+  res.send("Hello world Final")
+})
+
 
 // Connect Mongoose
 async function start() {
   try {
     set('strictQuery', true)
-    await connect(`mongodb://test1-mongo-srv:27017/test`, {});
-    console.log('MongoDB Connected on Test1');
+    connect(`mongodb://test1-mongo-srv:27017/test`, {})
+    .then(() => {
+      console.log('MongoDB Connected on Test1');
+    }).catch(err => {
+      process.exit(1);
+    })
+    
 
     // Connect Redis
-    redis.connect('test-redis-srv');
+    redis.connect('test-redis-srv')
 
     // Nats Client 
-    await nat.connect('somity', 'test1', 'http://nats-srv:4222')
+    nat.connect('somity', 'test1', 'http://nats-srv:4222').then(() => {
+      // 
+    }).catch(err => {
+      process.exit(1);
+    })
 
     app.listen(5000, () => {
       // server running
       console.log(`Server Running on http://localhost:5000`);
-    })
+    });
 
   } catch (error) {
-    console.log(error);
+    console.log("ERROR OCCURED", error);
     process.exit(1)
   }
 }
