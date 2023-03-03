@@ -24,7 +24,7 @@ function StartNats(){
 
   const randomName =  randomBytes(4).toString('hex');
   const stan = nats.connect('somity',randomName, {
-    url: process.env.PLATEFORM ==='local'? 'http://localhost:4222' :'http://somity_nats-depl:4222'
+    url: process.env.PLATEFORM ==='local'? 'http://localhost:4222' :'http://host.docker.internal:4222'
   })
 
   stan.on('connect', () => {

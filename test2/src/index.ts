@@ -23,6 +23,7 @@ app.get('/api/test2/index', (req, res) => {
   nat.publish('test', {name:'test name'})
   res.send('Hello World')
 });
+
 // what should i do
 
 

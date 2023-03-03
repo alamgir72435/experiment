@@ -48,7 +48,7 @@ async function start(){
     
 
     setTimeout(async() => {
-      const natsUrl = process.env.PLATEFORM ==='local' ? 'http://localhost:4222' :'http://somity_nats-depl:4222';
+      const natsUrl = process.env.PLATEFORM ==='local' ? 'http://localhost:4222' :'http://host.docker.internal:4222';
       // get random number with randomBytes
       const randomNumber = randomBytes(10).toString('hex');
       await nats.connect('somity', randomNumber , natsUrl);

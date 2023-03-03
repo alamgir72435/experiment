@@ -17,7 +17,14 @@ build:
         manual:
           - dest: .
             src: 'src/**/*.ts'
-  
+    - image: alamgir72435/test2
+      context: test2
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - dest: .
+            src: 'src/**/*.ts'
 
   # artifacts:
   # - image: alamgir72435/test1
@@ -26,5 +33,10 @@ build:
   #     builder: gcr.io/buildpacks/builder:v1
 manifests:
   rawYaml:
-  - k8s/infra/test1-depl.yaml
-  - k8s/infra/ingress-srv.yaml
+    - k8s/infra/test1-depl.yaml
+    - k8s/infra/test2-depl.yaml
+    - k8s/infra/ingress-srv.yaml
+    - k8s/infra/nats-depl.yaml
+    - k8s/infra/test1-mongo-depl.yaml
+    - k8s/infra/test1-redis-depl.yaml
+
