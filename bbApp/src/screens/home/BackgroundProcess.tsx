@@ -8,41 +8,67 @@ import { useFocusEffect } from '@react-navigation/native'
 const BackgroundProcess = ({ _n }: { _n:number }) => {
 
   const sleep = (time:number) => new Promise((resolve) => setTimeout(() => resolve({}), time));
-
+  const limit  = 3000;
 
   function bibrateTheSound(){
-    const bibrate =  Vibration.vibrate(200);
+    const bibrate =  Vibration.vibrate(500);
    }
 
+   let interval: number | null = null;
 
   const veryIntensiveTask = async (taskDataArguments:any) => {
     // Example of an infinite loop task
     const { delay } = taskDataArguments;
     await new Promise( async (resolve) => {
         for (let i = 0; BackgroundService.isRunning(); i++) {
-            // console.log('Background Service',i);
-            // updateBackgroundService({ data:i });
-            let startTime = new Date().getTime();
-            await axios.get('/administrator/request-latency', {
-              params:{
-                page:1,
-                pageSize:10,
-                largeReq:false
+
+          
+
+              
+            
+              let startTime = 0;
+              try {
+                startTime = new Date().getTime();
+                interval = setInterval(() => {
+                  bibrateTheSound();
+                  console.log(i,'Interval elapsed')
+                }, limit);
+
+                await axios.get('/administrator/request-latency', {
+                  params:{
+                    page:1,
+                    pageSize:10,
+                    largeReq:false
+                  }
+                });
+
+    
+              } catch (error) {
+                console.log('Error getting');
+                // clear interval
+                if(interval){
+                  clearInterval(interval)
+                }
+                
               }
-            });
+              
+              if(interval){
+                clearInterval(interval)
+              }
+              const endTime = new Date().getTime();
+              const timeElapsed = endTime - startTime;
+  
+              if(timeElapsed > limit){
+                // Play Bibrator
+                bibrateTheSound();
+              }
 
-            const endTime = new Date().getTime();
-            const timeElapsed = endTime - startTime;
+              updateBackgroundService({ data:`${timeElapsed}ms` });
+              await sleep(delay);
+            
+          
 
-            if(timeElapsed > 2000){
-              // Play Bibrator
-              bibrateTheSound();
-            }
-
-            updateBackgroundService({ data:`${timeElapsed}ms` });
-
-
-            await sleep(delay);
+            
         }
     });
 };
@@ -71,6 +97,9 @@ async function updateBackgroundService({ data }: any){
   await BackgroundService.updateNotification({taskDesc: `Latency : ${data}`}); 
   // Only Android, iOS will ignore this call
 }
+
+
+
 
 
 
