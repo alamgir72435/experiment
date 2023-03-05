@@ -14,10 +14,31 @@ axios.interceptors.request.use(async function (config) {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
+  config.headers['request-startTime'] = new Date().getTime();
+
   return config;
 }, function (error) {
   // Do something with request error
   return Promise.reject(error);
 });
+
+// response interceptor
+axios.interceptors.response.use(function (response) {
+  // Do something with response data
+  const endTime = new Date().getTime();
+  const start = response.config.headers['request-startTime'];
+  // const milliseconds = Math.round((end[0] * 1000) + (end[1] / 1000000))
+  
+  const milliseconds = endTime - start;
+  AsyncStorage.setItem('request-duration', String(milliseconds))
+  
+  
+  return response;
+}, function (error) {
+  // Do something with response error
+  return Promise.reject(error);
+});
+
+
 
 export { axios }

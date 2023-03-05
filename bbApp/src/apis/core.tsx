@@ -17,6 +17,7 @@ export const useLatency = ({ i, page,pageSize }:{i:number, page:number, pageSize
       return data;
   }, {
     enabled:i ? true:false,
-    refetchInterval:1000
+    refetchInterval:1000,
+    
   });
 };
